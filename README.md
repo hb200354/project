@@ -1,7 +1,7 @@
 readme_content = """
-# DATA2x01 Group Assignment – Inner South West Analysis
+# DATA2001 Group Assignment – Inner South West, Parramatta Analysis
 
-This project analyzes socio-economic features of the Inner South West SA4 region using various datasets, PostgreSQL/PostGIS, and Python-based spatial processing.
+This project analyzes socio-economic features of the Inner South West, Parramatta SA4 region using various datasets, PostgreSQL/PostGIS, and Python-based spatial processing.
 
 ## 📁 Project Structure
 - `scripts/` – Python scripts for data loading, score calculation, and visualization
@@ -9,6 +9,7 @@ This project analyzes socio-economic features of the Inner South West SA4 region
 - `output/` – Output visualizations (e.g., score maps)
 - `code.ipynb` – Step-by-step Jupyter notebook with the full workflow
 - `Assignment Report.pdf` – Final written report with methodology and insights
+- `README.md` – Project documentation
 
 ## 🔧 Technologies Used
 - Python (pandas, geopandas, sqlalchemy, scipy, matplotlib)
