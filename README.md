@@ -1,49 +1,57 @@
-readme_content = """
-# DATA2001 Group Assignment – Inner South West, Parramatta, and Northern Beaches Analysis
+# DATA2001 Group Assignment – SA4 Well-Resourced Area Scoring
 
-This project analyzes socio-economic features of the Inner South West, Parramatta, and Northern Beaches SA4 region using various datasets, PostgreSQL/PostGIS, and Python-based spatial processing.
+This project analyzes the well-resourced status of SA2 regions within a given SA4 area in Greater Sydney. It uses various datasets to compute composite scores based on public amenities, economic indicators, and services.
 
 ## 📁 Project Structure
-- `scripts/` – Python scripts for data loading, score calculation, and visualization
-- `data/` – Input datasets (CSV and shapefiles)
-- `output/` – Output visualizations (e.g., score maps)
-- `code.ipynb` – Step-by-step Jupyter notebook with the full workflow
-- `Assignment Report.pdf` – Final written report with methodology and insights
+
+- `scripts/`
+  - `main.py` – Orchestrates the pipeline execution
+  - `data_loader.py` – Loads CSV and shapefile data into PostgreSQL/PostGIS
+  - `analyzer.py` – Contains the `analyze_sa4` function that processes an SA4
+  - `poi_fetcher.py` – Fetches and processes POI data using a mock API
+- `data/` – Contains input datasets such as Population.csv, Income.csv, Businesses.csv, and shapefiles
+- `output/` – Stores generated score maps, correlation plots, and CSV outputs
+- `notebooks/code.ipynb` – Jupyter notebook version of the analysis for interactive development
 - `README.md` – Project documentation
 
 ## 🧰 Technologies Used
 
-- **Python**: `pandas`, `geopandas`, `sqlalchemy`, `matplotlib`, `shapely`, `requests`
-- **PostgreSQL + PostGIS**: for storing and querying spatial and tabular data
-- **NSW ArcGIS API**: to collect Point of Interest (POI) data dynamically
-
----
+- **Python Libraries:** `pandas`, `geopandas`, `sqlalchemy`, `matplotlib`, `shapely`, `requests`
+- **Database:** PostgreSQL with PostGIS for spatial data support
 
 ## 🚀 Execution Flow
 
-1. **Data loading & processing**  
-   Load population, income, business, stops, school catchments, and POI data  
-   ➤ handled inside `analyze_sa4()` in `jupyter.ipynb`
+1. **Data Loading**
+   - Run `data_loader.py` to import all CSV and shapefiles into the PostgreSQL database.
+   - This creates and populates tables like `population`, `businesses`, `income`, `stops`, `school_catchments`.
 
-2. **Score calculation**  
-   For each SA2 in a selected SA4, calculate a weighted z-score:
-   ```text
-   Final Score = 
-   0.3 * z(POI count) + 
-   0.3 * z(median income) + 
-   0.2 * z(business count) + 
-   0.2 * z(young population)
+2. **SA4 Analysis**
+   - Call `analyze_sa4(sa4_name)` from `main.py` or the notebook.
+   - For each SA2 within the SA4, compute the following:
 
-## 📌 Output
-- `sa2_scores` table with computed values
-- `score_map` showing spatial score distribution
+     - Business density per 1000 people
+     - Public transport stop count
+     - School catchment intersection count
+     - Point of Interest count (mock data)
+     
+   - Z-scores are computed and normalized using the sigmoid function:
 
----
+     ```python
+     Final Score = sigmoid(
+         z(business per 1000 people) +
+         z(stop count) +
+         z(school count) +
+         z(poi count)
+     )
+     ```
 
-Developed for DATA2001, University Project 2025.
-"""
+3. **Output**
+   - A CSV of scores is saved in `output/`
+   - A PNG map of SA2 scores with top-3 annotated is generated
+   - A PNG scatterplot of score vs income with correlation coefficient is also saved
+   - All scores are written to a PostgreSQL table for reuse
 
-with open("../README.md", "w", encoding="utf-8") as f:
-    f.write(readme_content)
+## 📌 Example
 
-print("✅ README.md generated.")
+```bash
+python scripts/main.py
