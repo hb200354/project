@@ -3,24 +3,28 @@ from analyze import analyze_sa4
 from summarize import summarize_scores, compare_sa4_scores_named
 
 def main():
+    # 0) Initialize DB schema
     create_schema()
 
-    df_parramatta = analyze_sa4('Sydney - Parramatta')
-    df_inner_south_west = analyze_sa4('Sydney - Inner South West')
-    df_northern_beaches = analyze_sa4('Sydney - Northern Beaches')
+    # List your SA4 regions here:
+    SA4_REGIONS = [
+        "Sydney - Parramatta",
+        "Sydney - Inner South West",
+        "Sydney - Northern Beaches"
+    ]
 
-    print("\n[ Parramatta Summary ]")
-    summarize_scores(df_parramatta)
-    print("\n[ Inner South West Summary ]")
-    summarize_scores(df_inner_south_west)
-    print("\n[ Northern Beaches Summary ]")
-    summarize_scores(df_northern_beaches)
+    # 1) Run analysis for each SA4
+    results = {r: analyze_sa4(r) for r in SA4_REGIONS}
 
-    compare_sa4_scores_named({
-        "Parramatta": df_parramatta,
-        "Inner South West": df_inner_south_west,
-        "Northern Beaches": df_northern_beaches
-    })
+    # 2) Summaries
+    for name, df in results.items():
+        print(f"\n=== Summary for {name} ===")
+        print(summarize_scores(df).to_string(index=False))
+
+    # 3) Cross-SA4 comparison
+    comp = compare_sa4_scores_named(results)
+    print("\n=== Cross-SA4 Comparison ===")
+    print(comp.to_string(index=False))
 
 if __name__ == "__main__":
     main()
